@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UI/UX Prototype — Chat với tài liệu</title>
+  <meta name="description" content="Mục lục prototype HTML từ Blueprint IEEE 1016-2009: danh sách màn hình, trạng thái và truy vết tới user story.">
+  <link rel="stylesheet" href="assets/tokens.css">
+  <link rel="stylesheet" href="assets/components.css">
+</head>
+<body>
+  <main class="page" id="main" tabindex="-1">
+    <div class="page-header">
+      <div>
+        <h1>UI/UX Prototype — Chat với tài liệu (MVP)</h1>
+        <p class="muted">Phiên bản 0.1 · 2026-10-21 · Nguồn: <a href="../Blueprint_Design.md">Blueprint_Design.md</a> (IEEE 1016-2009), PRD, User Stories. Dữ liệu trong prototype là hư cấu.</p>
+      </div>
+      <a class="btn btn-primary" href="workspace.html">Mở màn hình chính</a>
+    </div>
+
+    <div class="callout callout-info" style="margin-bottom:24px">
+      <span id="info-icon"></span>
+      <div class="callout-body"><p>Mỗi trang có nút <strong>“Bảng demo”</strong> ở góc phải dưới để chuyển vai trò (Chuyên viên / Trưởng nhóm / Quản lý), giao diện sáng/tối và các trạng thái (kho trống, mất kết nối, AI bận…). Mở console trình duyệt để xem các sự kiện analytics EV-xx được phát.</p></div>
+    </div>
+
+    <h2 style="margin-bottom:12px">Màn hình</h2>
+    <div class="hub-grid" style="margin-bottom:32px" id="screens"></div>
+
+    <h2 style="margin-bottom:12px">Truy vết User story → màn hình</h2>
+    <div class="card table-wrap" style="margin-bottom:32px"><table class="data">
+      <thead><tr><th scope="col">User story</th><th scope="col">Màn hình / component</th><th scope="col">Cách xem trong prototype</th></tr></thead>
+      <tbody>
+        <tr><td>US-001 Đăng nhập</td><td>login.html · AppShell</td><td>Bảng demo → “Không có quyền”, “Phiên hết hạn”</td></tr>
+        <tr><td>US-002, US-004, US-006 Tải lên</td><td>Workspace · UploadDropzone, DocumentRow</td><td>Kéo-thả PDF; file không phải PDF bị từ chối; tên chứa “scan”/“matkhau” → lỗi xử lý; tải lại file trùng tên → hộp thoại trùng</td></tr>
+        <tr><td>US-003 Danh sách & trạng thái</td><td>Workspace · DocumentSidebar, StatusBadge</td><td>Lọc theo tên (không dấu cũng được), xem badge Sẵn sàng / Đang xử lý / Lỗi / trang không đọc được</td></tr>
+        <tr><td>US-005 Gỡ tài liệu</td><td>Workspace · ConfirmDialog, Toast</td><td>Nút thùng rác → xác nhận; trích dẫn cũ chuyển “Tài liệu đã bị gỡ”</td></tr>
+        <tr><td>US-007 Nhật ký</td><td>audit.html · AuditTable</td><td>Vai trò Trưởng nhóm; vai trò khác thấy 403</td></tr>
+        <tr><td>US-008 Hỏi tiếng Việt</td><td>Workspace · QuestionComposer, ChatThread</td><td>Enter gửi, Shift+Enter xuống dòng, nút Dừng, bộ đếm 2.000 ký tự</td></tr>
+        <tr><td>US-009..US-012 Grounding, trích dẫn, không tìm thấy, đa tài liệu</td><td>Workspace · AnswerMessage, CitationChip, SourceList</td><td>Hỏi “thanh toán”, “tổng giá trị” (mâu thuẫn 2 bản hợp đồng), “nhân sự” (một phần), “có nên ký” (không khuyến nghị), câu khác (không tìm thấy)</td></tr>
+        <tr><td>US-013 Giới hạn phạm vi</td><td>Workspace · checkbox + ScopeBar</td><td>Tick 1 tài liệu rồi hỏi câu có đáp án ở tài liệu khác → “không tìm thấy”</td></tr>
+        <tr><td>US-014 Hỏi tiếp</td><td>Workspace</td><td>Hỏi “thanh toán” rồi “Còn bảo hành thì sao?”; Bảng demo → “Hội thoại đã đủ 20 lượt”</td></tr>
+        <tr><td>US-016 Mở trang trích dẫn</td><td>Workspace · SourceViewer</td><td>Bấm chip [n]; Esc để đóng; dưới 1280px mở dạng lớp phủ</td></tr>
+        <tr><td>US-017, US-018 Lịch sử riêng tư</td><td>history.html · HistoryList</td><td>Bảng demo → “Mở hội thoại của người khác”</td></tr>
+        <tr><td>US-019, US-020 Thống kê</td><td>stats.html · WeeklyStats</td><td>Vai trò Quản lý; di chuột/Tab vào cột để xem tooltip</td></tr>
+        <tr><td>US-021 Đánh giá, US-022 Sao chép</td><td>Workspace · FeedbackControl</td><td>👍/👎 dưới câu trả lời, chọn lý do; nút “Sao chép”</td></tr>
+      </tbody></table></div>
+
+    <h2 style="margin-bottom:12px">Ghi chú</h2>
+    <div class="card card-pad">
+      <ul style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px">
+        <li>Prototype tĩnh, chạy trực tiếp bằng cách mở file trong Chrome/Edge — không cần máy chủ, không tải tài nguyên ngoài (TC-04).</li>
+        <li>Bố cục 3 vùng ở ≥ 1280px; 768–1279px: kho tài liệu thành drawer, vùng xem thành lớp phủ (Blueprint §2.4).</li>
+        <li>Token màu đã kiểm tra tương phản WCAG 2.1 AA; màu biểu đồ đã chạy validator (Blueprint §3.6.3).</li>
+        <li>Figma frames chưa được tạo: cần cấp quyền Figma connector trước.</li>
+      </ul>
+    </div>
+  </main>
+  <script src="assets/common.js"></script>
+  <script>
+  (function () {
+    const { icon } = window.CWD;
+    window.CWD.renderHeader("");
+    document.getElementById("info-icon").outerHTML = icon("info");
+    const screens = [
+      ["workspace.html", "chat", "Hỏi đáp (Workspace)", "Kho tài liệu · hội thoại có trích dẫn · xem trang nguồn. UF-01..UF-05.", "US-002..US-016, US-021, US-022"],
+      ["login.html", "lock", "Đăng nhập & quyền truy cập", "SSO, không có quyền, phiên hết hạn, đã đăng xuất.", "US-001"],
+      ["history.html", "history", "Lịch sử hội thoại", "Danh sách hội thoại riêng tư, trạng thái rỗng và không tìm thấy. UF-08.", "US-017, US-018"],
+      ["audit.html", "log", "Nhật ký tài liệu", "Chỉ trưởng nhóm. Lọc theo ngày, validation inline. UF-06.", "US-007"],
+      ["stats.html", "chart", "Thống kê sử dụng", "Chỉ quản lý. Chỉ số tuần, biểu đồ cột có tooltip, bảng số liệu. UF-07.", "US-019, US-020"],
+      ["design-system.html", "sliders", "Design System", "Token sáng/tối, typography, kho component với mọi trạng thái.", "Blueprint §3.6"]
+    ];
+    document.getElementById("screens").innerHTML = screens.map(s => '<a class="card hub-card" href="' + s[0] + '"><h2>' + icon(s[1]) + s[2] + '</h2><p class="muted">' + s[3] + '</p><p class="trace">' + s[4] + "</p></a>").join("");
+    window.CWD.demoPanel("Mục lục");
+  })();
+  </script>
+</body>
+</html>

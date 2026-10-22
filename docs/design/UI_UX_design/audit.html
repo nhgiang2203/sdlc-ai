@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nhật ký tài liệu — Chat với tài liệu</title>
+  <meta name="description" content="Nhật ký đưa vào/gỡ tài liệu, chỉ trưởng nhóm xem được. Trace: US-007, UC-11, BR-019, UF-06.">
+  <link rel="stylesheet" href="assets/tokens.css">
+  <link rel="stylesheet" href="assets/components.css">
+</head>
+<body>
+  <main class="page" id="main" tabindex="-1"></main>
+  <script src="assets/common.js"></script>
+  <script src="assets/mock-data.js"></script>
+  <script>
+  (function () {
+    const { icon, esc } = window.CWD;
+    const s = window.CWD.renderHeader("audit");
+    const main = document.getElementById("main");
+    if (!s.canAudit) {
+      main.innerHTML = '<div class="card"><div class="empty"><div class="empty-icon">' + icon("lock", "icon-lg") + '</div><h1>Bạn không có quyền xem trang này</h1><p>Nhật ký tài liệu chỉ dành cho trưởng nhóm Phát triển kinh doanh.</p><a class="btn btn-secondary" href="workspace.html">Về trang Hỏi đáp</a></div></div>';
+      window.CWD.demoPanel("Nhật ký tài liệu");
+      return;
+    }
+    const ACT = {
+      DOCUMENT_UPLOADED: '<span class="badge badge-info">' + icon("upload") + "Đã tải lên</span>",
+      DOCUMENT_REMOVED: '<span class="badge badge-neutral">' + icon("trash") + "Đã gỡ</span>",
+      DOCUMENT_FAILED: '<span class="badge badge-failed">' + icon("alertCircle") + "Xử lý lỗi</span>"
+    };
+    main.innerHTML =
+      '<div class="page-header"><div><h1>Nhật ký tài liệu</h1><p class="muted">Ghi lại mọi thao tác đưa vào, gỡ và lỗi xử lý tài liệu. Nhật ký chỉ đọc, không chỉnh sửa được.</p></div></div>' +
+      '<form class="toolbar" id="filter" novalidate>' +
+      '<div class="field"><label for="from">Từ ngày</label><input class="input" type="date" id="from" value="2026-09-01"></div>' +
+      '<div class="field"><label for="to">Đến ngày</label><input class="input" type="date" id="to" value="2026-10-21"></div>' +
+      '<button class="btn btn-secondary" type="submit">Áp dụng</button><p class="field-error" id="range-error" role="alert"></p></form>' +
+      '<div class="card table-wrap"><table class="data"><caption class="visually-hidden">Nhật ký tài liệu, mới nhất trước</caption><thead><tr><th scope="col">Thời điểm</th><th scope="col">Thao tác</th><th scope="col">Tài liệu</th><th scope="col">Người thực hiện</th></tr></thead><tbody id="rows"></tbody></table></div>';
+    function fmt(iso) { const d = new Date(iso); return d.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" }) + " " + d.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" }); }
+    function render() {
+      const from = document.getElementById("from").value, to = document.getElementById("to").value;
+      const err = document.getElementById("range-error");
+      const days = (new Date(to) - new Date(from)) / 86400000;
+      ["from", "to"].forEach(id => document.getElementById(id).setAttribute("aria-invalid", "false"));
+      if (from && to && days < 0) { err.textContent = "“Từ ngày” phải trước hoặc bằng “Đến ngày”."; document.getElementById("from").setAttribute("aria-invalid", "true"); return; }
+      if (days > 90) { err.textContent = "Khoảng thời gian tối đa 90 ngày."; document.getElementById("to").setAttribute("aria-invalid", "true"); return; }
+      err.textContent = "";
+      const rows = window.CWD_DATA.audit.filter(a => (!from || a.at.slice(0, 10) >= from) && (!to || a.at.slice(0, 10) <= to));
+      document.getElementById("rows").innerHTML = rows.length ? rows.map(a =>
+        "<tr><td>" + fmt(a.at) + "</td><td>" + ACT[a.action] + (a.note ? '<div class="muted" style="font-size:12px;margin-top:4px">' + esc(a.note) + "</div>" : "") + "</td><td>" + esc(a.doc) + "</td><td>" + esc(a.actor) + "</td></tr>").join("")
+        : '<tr><td colspan="4"><div class="empty" style="padding:32px"><h2>Không có thao tác nào trong khoảng thời gian này</h2><p>Thử chọn khoảng thời gian khác.</p></div></td></tr>';
+    }
+    document.getElementById("filter").addEventListener("submit", e => { e.preventDefault(); render(); });
+    render();
+    window.CWD.demoPanel("Nhật ký tài liệu", panel => {
+      const b = document.createElement("button"); b.className = "btn btn-secondary btn-sm"; b.textContent = "Khoảng ngày không có dữ liệu";
+      b.addEventListener("click", () => { document.getElementById("from").value = "2026-01-01"; document.getElementById("to").value = "2026-01-31"; render(); }); panel.appendChild(b);
+      const c = document.createElement("button"); c.className = "btn btn-secondary btn-sm"; c.textContent = "Khoảng ngày không hợp lệ";
+      c.addEventListener("click", () => { document.getElementById("from").value = "2026-10-21"; document.getElementById("to").value = "2026-10-01"; render(); }); panel.appendChild(c);
+    });
+  })();
+  </script>
+</body>
+</html>

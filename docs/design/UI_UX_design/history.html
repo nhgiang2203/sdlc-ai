@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lịch sử hội thoại — Chat với tài liệu</title>
+  <meta name="description" content="Danh sách hội thoại riêng tư của người dùng. Trace: US-017, US-018, UC-22, UC-23, UF-08.">
+  <link rel="stylesheet" href="assets/tokens.css">
+  <link rel="stylesheet" href="assets/components.css">
+</head>
+<body>
+  <main class="page" id="main" tabindex="-1">
+    <div class="page-header">
+      <div><h1>Lịch sử hội thoại</h1><p class="muted">Chỉ bạn xem được các hội thoại này. Hội thoại không hoạt động quá 180 ngày sẽ tự động bị xoá.</p></div>
+      <a class="btn btn-primary" href="workspace.html" id="new-btn"></a>
+    </div>
+    <div class="card" id="list-card"></div>
+  </main>
+  <script src="assets/common.js"></script>
+  <script src="assets/mock-data.js"></script>
+  <script>
+  (function () {
+    const { icon, esc } = window.CWD;
+    window.CWD.renderHeader("history");
+    document.getElementById("new-btn").innerHTML = icon("plus") + "Hội thoại mới";
+    const card = document.getElementById("list-card");
+    function render(mode) {
+      if (mode === "empty") {
+        card.innerHTML = '<div class="empty"><div class="empty-icon">' + icon("history", "icon-lg") + '</div><h2>Chưa có hội thoại nào</h2><p>Các câu hỏi bạn đặt sẽ được lưu ở đây để xem lại.</p><a class="btn btn-primary" href="workspace.html">Đặt câu hỏi đầu tiên</a></div>';
+      } else if (mode === "notfound") {
+        card.innerHTML = '<div class="empty"><div class="empty-icon">' + icon("info", "icon-lg") + '</div><h2>Không tìm thấy hội thoại</h2><p>Hội thoại không tồn tại, đã hết hạn lưu giữ, hoặc không thuộc về bạn.</p><a class="btn btn-secondary" href="history.html">Về danh sách hội thoại</a></div>';
+      } else if (mode === "loading") {
+        card.innerHTML = '<div class="card-pad"><div class="skeleton" aria-label="Đang tải"><span></span><span></span><span></span></div></div>';
+      } else {
+        card.innerHTML = '<ul class="history-list">' + window.CWD_DATA.conversations.map(c =>
+          '<li><a class="history-item" href="workspace.html">' + icon("chat") + '<div style="flex:1;min-width:0"><div class="title">' + esc(c.title) + '</div><div class="muted" style="font-size:12px">' + c.turns + " lượt hỏi · " + esc(c.last) + "</div></div>" + icon("chevronRight") + "</a></li>").join("") + "</ul>";
+      }
+    }
+    render("list");
+    window.CWD.demoPanel("Trạng thái Lịch sử", panel => {
+      [["list", "Có dữ liệu"], ["loading", "Đang tải"], ["empty", "Chưa có hội thoại"], ["notfound", "Mở hội thoại của người khác / hết hạn"]].forEach(([k, l]) => {
+        const b = document.createElement("button"); b.className = "btn btn-secondary btn-sm"; b.textContent = l; b.addEventListener("click", () => render(k)); panel.appendChild(b);
+      });
+    });
+  })();
+  </script>
+</body>
+</html>

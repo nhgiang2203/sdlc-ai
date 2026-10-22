@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hỏi đáp — Chat với tài liệu</title>
+  <meta name="description" content="Workspace 3 vùng: kho tài liệu, hội thoại có trích dẫn, xem trang nguồn. Trace: US-002..US-016, US-021, US-022; UC-04..UC-21; Blueprint §3.6.2.">
+  <link rel="stylesheet" href="assets/tokens.css">
+  <link rel="stylesheet" href="assets/components.css">
+</head>
+<body>
+  <div class="workspace" id="workspace">
+    <!-- DocumentSidebar (US-002..US-007, US-013) -->
+    <aside class="sidebar" id="sidebar" aria-label="Kho tài liệu">
+      <div class="sidebar-head">
+        <div class="sidebar-title">
+          <h2>Kho tài liệu</h2>
+          <button class="icon-btn only-narrow" id="sidebar-close" aria-label="Đóng kho tài liệu"></button>
+        </div>
+        <button class="dropzone" id="dropzone" type="button" aria-describedby="dz-hint">
+          <span class="empty-icon" style="width:36px;height:36px" id="dz-icon"></span>
+          <span><strong>Thêm tài liệu PDF</strong><small id="dz-hint">Kéo-thả hoặc bấm để chọn · tối đa 50 MB/file</small></span>
+        </button>
+        <input type="file" id="file-input" accept="application/pdf,.pdf" multiple hidden>
+        <div class="search">
+          <span id="search-icon"></span>
+          <label class="visually-hidden" for="doc-filter">Lọc tài liệu theo tên</label>
+          <input class="input" id="doc-filter" type="search" placeholder="Lọc theo tên tài liệu" autocomplete="off">
+        </div>
+      </div>
+      <ul class="doc-list" id="doc-list" aria-label="Danh sách tài liệu"></ul>
+      <div class="sidebar-foot" id="sidebar-foot"></div>
+    </aside>
+
+    <!-- Chat column (US-008..US-015) -->
+    <main class="chat" id="main" tabindex="-1">
+      <div class="chat-head">
+        <button class="btn btn-secondary btn-sm only-narrow" id="sidebar-open" aria-controls="sidebar" aria-expanded="false"></button>
+        <h1 id="chat-title">Hội thoại mới</h1>
+        <a class="btn btn-ghost btn-sm" href="history.html" id="history-link"></a>
+        <button class="btn btn-secondary btn-sm" id="new-chat" type="button"></button>
+      </div>
+      <div class="thread" id="thread">
+        <div class="thread-inner" id="thread-inner"></div>
+      </div>
+      <div class="composer-wrap">
+        <div class="composer-inner">
+          <div class="scope-bar" id="scope-bar" aria-live="polite"></div>
+          <form class="composer" id="composer" novalidate>
+            <label for="question" class="visually-hidden">Câu hỏi về tài liệu</label>
+            <textarea id="question" rows="1" maxlength="2400" placeholder="Hỏi về nội dung tài liệu…" aria-describedby="composer-hint composer-count"></textarea>
+            <button class="send-btn" id="send" type="submit" aria-label="Gửi câu hỏi"></button>
+          </form>
+          <div class="composer-meta">
+            <span id="composer-hint">Enter để gửi · Shift + Enter để xuống dòng</span>
+            <span id="composer-count" aria-live="polite"></span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- SourceViewer (US-016) -->
+    <section class="viewer" id="viewer" aria-label="Xem tài liệu nguồn" hidden>
+      <div class="viewer-head">
+        <span id="viewer-icon"></span>
+        <div class="viewer-title"><strong id="viewer-name"></strong><small id="viewer-sub"></small></div>
+        <button class="icon-btn" id="viewer-close" aria-label="Đóng vùng xem tài liệu (Esc)"></button>
+      </div>
+      <div class="viewer-body" id="viewer-body" tabindex="0" aria-live="polite"></div>
+      <div class="viewer-foot">
+        <button class="icon-btn" id="viewer-prev" aria-label="Trang trước"></button>
+        <span id="viewer-page"></span>
+        <button class="icon-btn" id="viewer-next" aria-label="Trang sau"></button>
+      </div>
+    </section>
+  </div>
+
+  <div class="drag-overlay" id="drag-overlay" hidden>
+    <div><span class="empty-icon" id="drag-icon"></span><h2>Thả để thêm vào kho</h2><p class="muted">Chỉ nhận file PDF, tối đa 50 MB mỗi file</p></div>
+  </div>
+  <div class="visually-hidden" id="sr-live" role="status" aria-live="polite"></div>
+
+  <script src="assets/common.js"></script>
+  <script src="assets/mock-data.js"></script>
+  <script src="assets/workspace.js"></script>
+</body>
+</html>

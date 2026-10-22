@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Đăng nhập — Chat với tài liệu</title>
+  <meta name="description" content="Đăng nhập SSO, không có quyền, phiên hết hạn, đã đăng xuất. Trace: US-001, UC-01..UC-03, EC-19, EC-20.">
+  <link rel="stylesheet" href="assets/tokens.css">
+  <link rel="stylesheet" href="assets/components.css">
+</head>
+<body>
+  <main class="auth-page" id="main">
+    <div class="card auth-card" id="card"></div>
+  </main>
+  <script src="assets/common.js"></script>
+  <script>
+  (function () {
+    const { icon, track } = window.CWD;
+    const st = new URLSearchParams(location.search).get("state") || "login";
+    const card = document.getElementById("card");
+    const brand = '<span class="brand-mark" style="width:48px;height:48px">' + icon("logo", "icon-lg") + "</span>";
+    const views = {
+      login: brand + '<h1>Chat với tài liệu</h1><p class="muted">Hỏi đáp trên tài liệu dự án, có trích dẫn trang nguồn. Dành cho thành viên đội Phát triển kinh doanh.</p>' +
+        '<a class="btn btn-primary" href="workspace.html">' + icon("lock") + "Đăng nhập bằng tài khoản công ty</a>" +
+        '<p class="muted" style="font-size:12px">Bạn sẽ được chuyển tới trang đăng nhập một lần (SSO) của công ty.</p>',
+      expired: brand + '<h1>Phiên đăng nhập đã hết hạn</h1><div class="callout callout-info" style="text-align:left">' + icon("info") + '<div class="callout-body"><p>Câu hỏi bạn đang soạn vẫn được giữ lại và sẽ hiện lại sau khi đăng nhập.</p></div></div>' +
+        '<a class="btn btn-primary" href="workspace.html">' + icon("lock") + "Đăng nhập lại</a>",
+      forbidden: '<span class="empty-icon" style="width:56px;height:56px">' + icon("lock", "icon-lg") + '</span><h1>Bạn chưa được cấp quyền sử dụng</h1><p class="muted">Tài khoản của bạn đã đăng nhập thành công nhưng chưa thuộc nhóm được phép dùng công cụ này.</p>' +
+        '<p>Liên hệ trưởng nhóm Phát triển kinh doanh hoặc bộ phận IT để được cấp quyền.</p><a class="btn btn-secondary" href="login.html">Đăng nhập bằng tài khoản khác</a>',
+      logged_out: brand + '<h1>Bạn đã đăng xuất</h1><p class="muted">Dữ liệu phiên đã được xoá khỏi trình duyệt này.</p><a class="btn btn-primary" href="workspace.html">' + icon("lock") + "Đăng nhập lại</a>"
+    };
+    card.innerHTML = views[st] || views.login;
+    if (st === "forbidden") track("access_denied", { reason: "not_authorized" });
+    if (st === "expired") track("access_denied", { reason: "session_expired" });
+    window.CWD.demoPanel("Trạng thái đăng nhập", panel => {
+      [["login", "Đăng nhập"], ["expired", "Phiên hết hạn"], ["forbidden", "Không có quyền"], ["logged_out", "Đã đăng xuất"]].forEach(([k, l]) => {
+        const a = document.createElement("a"); a.className = "btn btn-secondary btn-sm"; a.href = "login.html?state=" + k; a.textContent = l; panel.appendChild(a);
+      });
+    });
+  })();
+  </script>
+</body>
+</html>

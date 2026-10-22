@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Design System — Chat với tài liệu</title>
+  <meta name="description" content="Token, typography và kho component với mọi trạng thái. Trace: Blueprint §2.5, §3.6.2, §3.6.3, §3.6.4.">
+  <link rel="stylesheet" href="assets/tokens.css">
+  <link rel="stylesheet" href="assets/components.css">
+</head>
+<body>
+  <main class="page" id="main" tabindex="-1">
+    <div class="page-header"><div><h1>Design System</h1><p class="muted">Token và component dùng chung (Blueprint §3.6). Đổi giao diện sáng/tối trong “Bảng demo” để xem cả hai bộ token.</p></div></div>
+
+    <section class="ds-section" aria-labelledby="t-color"><h2 id="t-color">Màu</h2><div class="swatches" id="swatches"></div></section>
+
+    <section class="ds-section" aria-labelledby="t-type"><h2 id="t-type">Typography</h2>
+      <div class="card card-pad" style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:var(--text-2xl);font-weight:600">24 · Số liệu lớn — Tiếng Việt có dấu đầy đủ</div>
+        <div style="font-size:var(--text-xl);font-weight:600">20 · Tiêu đề trang</div>
+        <div style="font-size:var(--text-lg);font-weight:600">18 · Tiêu đề vùng</div>
+        <div style="font-size:var(--text-md)">16 · Nội dung hỏi đáp: Thời hạn bảo hành là 12 tháng kể từ ngày nghiệm thu.</div>
+        <div style="font-size:var(--text-sm)">14 · Nhãn giao diện, danh sách tài liệu, nút</div>
+        <div style="font-size:var(--text-xs)" class="muted">12 · Chú thích, metadata, bộ đếm ký tự</div>
+      </div>
+    </section>
+
+    <section class="ds-section" aria-labelledby="t-comp"><h2 id="t-comp">Component & trạng thái</h2>
+      <div class="ds-grid">
+        <div class="card ds-demo"><h3>Button</h3>
+          <div class="ds-row"><button class="btn btn-primary">Chính</button><button class="btn btn-secondary">Phụ</button><button class="btn btn-ghost">Ghost</button><button class="btn btn-danger">Gỡ tài liệu</button><button class="btn btn-primary" disabled>Disabled</button></div>
+          <p class="trace">Vùng bấm ≥ 32 px; focus ring 2 px `--color-focus-ring`.</p></div>
+
+        <div class="card ds-demo"><h3>StatusBadge</h3>
+          <div class="ds-row" id="badges"></div><p class="trace">Biểu tượng + chữ + màu (UXD-07). US-003, US-004.</p></div>
+
+        <div class="card ds-demo"><h3>CitationChip</h3>
+          <div class="ds-row" style="font-size:16px">Thanh toán 30% <button class="cite">1</button> mặc định · <button class="cite" aria-pressed="true">2</button> đang mở · <button class="cite is-removed">3</button> tài liệu đã gỡ</div>
+          <p class="trace">US-010, US-016, EC-17.</p></div>
+
+        <div class="card ds-demo"><h3>Input & lỗi inline</h3>
+          <div class="field"><label for="ds-i1">Từ ngày</label><input class="input" id="ds-i1" type="date" value="2026-10-21"></div>
+          <div class="field"><label for="ds-i2">Đến ngày</label><input class="input" id="ds-i2" type="date" value="2026-10-01" aria-invalid="true" aria-describedby="ds-e"><span class="field-error" id="ds-e">“Từ ngày” phải trước hoặc bằng “Đến ngày”.</span></div></div>
+
+        <div class="card ds-demo"><h3>DocumentRow</h3><ul class="doc-list" style="padding:0" id="rows"></ul><p class="trace">Blueprint §3.7.2.</p></div>
+
+        <div class="card ds-demo"><h3>QuestionComposer</h3>
+          <div class="composer"><textarea rows="1" aria-label="Ví dụ ô hỏi">Điều khoản thanh toán là gì?</textarea><button class="send-btn" aria-label="Gửi" id="ds-send"></button></div>
+          <div class="composer is-invalid"><textarea rows="1" aria-label="Ví dụ vượt giới hạn">… 2.104 ký tự</textarea><button class="send-btn" disabled aria-label="Gửi" id="ds-send2"></button></div>
+          <div class="composer-meta"><span></span><span class="is-error">Câu hỏi tối đa 2.000 ký tự (2.104 / 2.000)</span></div>
+          <div class="composer is-disabled"><textarea rows="1" disabled placeholder="Thêm tài liệu để bắt đầu hỏi." aria-label="Ví dụ bị vô hiệu"></textarea><button class="send-btn" disabled aria-label="Gửi" id="ds-send3"></button></div>
+          <div class="composer"><textarea rows="1" aria-label="Ví dụ đang trả lời">Đang trả lời…</textarea><button class="send-btn is-stop" aria-label="Dừng" id="ds-stop"></button></div>
+          <p class="trace">Blueprint §3.7.4.</p></div>
+
+        <div class="card ds-demo"><h3>AnswerMessage — các trạng thái</h3><div id="answers" style="display:flex;flex-direction:column;gap:16px"></div><p class="trace">Blueprint §3.7.1; US-009, US-010, US-011.</p></div>
+
+        <div class="card ds-demo"><h3>Toast & Banner</h3>
+          <div class="ds-row"><button class="btn btn-secondary btn-sm" id="t1">Toast thành công</button><button class="btn btn-secondary btn-sm" id="t2">Toast lỗi</button><button class="btn btn-secondary btn-sm" id="t3">Toast thông tin</button></div>
+          <div class="banner banner-warning" style="border:0;border-radius:8px" id="ds-banner"></div>
+          <p class="trace">Toast tự ẩn sau 5 giây, có nút đóng; banner cố định cho mất kết nối.</p></div>
+
+        <div class="card ds-demo"><h3>ConfirmDialog</h3><div><button class="btn btn-danger" id="dlg">Mở hộp thoại gỡ tài liệu</button></div><p class="trace">Bẫy focus, Esc để đóng, focus trả về nút mở. UXD-06.</p></div>
+
+        <div class="card ds-demo"><h3>EmptyState</h3><div class="empty" style="padding:16px" id="empty-demo"></div></div>
+
+        <div class="card ds-demo"><h3>Skeleton & tiến trình</h3><div class="answer-status" id="ds-loading"></div><div class="skeleton"><span></span><span></span><span></span></div><div class="progress" role="progressbar" aria-label="Ví dụ tiến trình" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"><span style="width:60%"></span></div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" aria-labelledby="t-writing"><h2 id="t-writing">Quy ước nội dung (UX writing)</h2>
+      <div class="card table-wrap"><table class="data"><thead><tr><th scope="col">Tình huống</th><th scope="col">Mẫu câu</th></tr></thead><tbody>
+        <tr><td>Không tìm thấy</td><td>Không tìm thấy thông tin này trong các tài liệu hiện có. Đã tìm trong {n} tài liệu.</td></tr>
+        <tr><td>AI bận</td><td>Hệ thống đang bận, vui lòng thử lại sau ít phút. [Thử lại]</td></tr>
+        <tr><td>Mất mạng</td><td>Mất kết nối. Câu hỏi của bạn vẫn được giữ lại.</td></tr>
+        <tr><td>Rate limit</td><td>Bạn đang hỏi quá nhanh. Vui lòng thử lại sau {s} giây.</td></tr>
+        <tr><td>File lỗi</td><td>PDF dạng ảnh scan — chưa hỗ trợ. Hãy dùng bản PDF có chữ chọn được.</td></tr>
+        <tr><td>Xác nhận gỡ</td><td>Gỡ tài liệu? “{tên}” sẽ không còn được dùng để trả lời. Thao tác này không hoàn tác được.</td></tr>
+      </tbody></table></div>
+    </section>
+  </main>
+  <script src="assets/common.js"></script>
+  <script>
+  (function () {
+    const { icon, toast, confirmDialog } = window.CWD;
+    window.CWD.renderHeader("");
+    const tokens = [
+      ["--color-bg", "Nền ứng dụng"], ["--color-surface", "Bề mặt"], ["--color-surface-muted", "Bề mặt phụ"], ["--color-border", "Đường chia"], ["--color-border-strong", "Viền điều khiển"],
+      ["--color-text", "Chữ chính"], ["--color-text-muted", "Chữ phụ"], ["--color-primary", "Chính"], ["--color-primary-soft", "Chính nhạt"], ["--color-primary-strong", "Chữ chip"],
+      ["--color-success", "Sẵn sàng"], ["--color-success-soft", "Nền sẵn sàng"], ["--color-warning", "Đang xử lý"], ["--color-warning-soft", "Nền cảnh báo"],
+      ["--color-danger", "Lỗi"], ["--color-danger-soft", "Nền lỗi"], ["--color-info", "Thông tin"], ["--color-info-soft", "Nền thông tin"], ["--color-highlight", "Tô sáng trích dẫn"], ["--chart-series-1", "Cột biểu đồ"]
+    ];
+    function renderSwatches() {
+      const cs = getComputedStyle(document.documentElement);
+      document.getElementById("swatches").innerHTML = tokens.map(([t, n]) => '<div class="swatch"><div class="swatch-color" style="background:var(' + t + ')"></div><div class="swatch-meta"><strong>' + n + "</strong><code>" + t + "</code><code>" + cs.getPropertyValue(t).trim() + "</code></div></div>").join("");
+    }
+    renderSwatches();
+    document.getElementById("badges").innerHTML =
+      '<span class="badge badge-ready">' + icon("check") + 'Sẵn sàng</span><span class="badge badge-processing">' + icon("loader", "spin") + 'Đang xử lý</span><span class="badge badge-processing">' + icon("alert") + 'Sẵn sàng · 2 trang không đọc được</span><span class="badge badge-failed">' + icon("alertCircle") + 'Lỗi</span><span class="badge badge-info">' + icon("upload") + 'Đang tải lên 40%</span><span class="badge badge-neutral">' + icon("stop") + "Đã dừng</span>";
+    const row = (name, badge, extra, cb) => '<li class="doc-row"><input type="checkbox" class="checkbox" aria-label="Chọn ' + name + '"' + (cb || "") + '><div><span class="doc-name">' + name + '</span><div class="doc-meta">' + badge + "<span>12 trang</span></div>" + (extra || "") + '</div><div class="doc-actions"><button class="icon-btn" aria-label="Gỡ ' + name + '">' + icon("trash") + "</button></div></li>";
+    document.getElementById("rows").innerHTML =
+      row("HopDong_v2.pdf", '<span class="badge badge-ready">' + icon("check") + "Sẵn sàng</span>", "", " checked") +
+      row("BienBan_1510.pdf", '<span class="badge badge-processing">' + icon("loader", "spin") + "Đang xử lý</span>", "", " disabled") +
+      row("GiayPhep_Scan.pdf", '<span class="badge badge-failed">' + icon("alertCircle") + "Lỗi</span>", '<p class="doc-error">PDF dạng ảnh scan — chưa hỗ trợ. Hãy dùng bản PDF có chữ chọn được.</p>', " disabled") +
+      row("BaoGia.pdf", '<span class="badge badge-failed">' + icon("wifiOff") + "Tải lên bị gián đoạn</span>", '<div class="progress"><span style="width:45%"></span></div>', " disabled");
+    ["ds-send", "ds-send2", "ds-send3"].forEach(id => document.getElementById(id).innerHTML = icon("send"));
+    document.getElementById("ds-stop").innerHTML = icon("stop");
+    const av = '<div class="msg-avatar" aria-hidden="true">' + icon("sparkle") + "</div>";
+    document.getElementById("answers").innerHTML =
+      '<div class="msg-answer">' + av + '<div class="answer-body"><div class="answer-status">' + icon("loader", "spin") + '<span>Đang tìm trong 5 tài liệu…</span></div><div class="skeleton"><span></span><span></span></div></div></div>' +
+      '<div class="msg-answer">' + av + '<div class="answer-body"><div class="answer-text"><p>Thời hạn bảo hành là 12 tháng <button class="cite">1</button>.</p></div><div class="sources"><h3>Nguồn</h3><ol><li><button class="source-item"><span class="cite" aria-hidden="true">1</span><span>HopDong_v2.pdf</span><span class="src-page">tr. 18</span></button></li></ol></div></div></div>' +
+      '<div class="msg-answer">' + av + '<div class="answer-body"><div class="answer-text"><p>Đội dự án gồm 12 người <button class="cite">1</button>.</p></div><div class="callout callout-warning">' + icon("alert") + '<div class="callout-body"><p>Chỉ tìm được một phần: tài liệu không có thông tin về chi phí nhân sự.</p></div></div></div></div>' +
+      '<div class="msg-answer">' + av + '<div class="answer-body"><div class="callout callout-info">' + icon("info") + '<div class="callout-body"><p class="callout-title">Không tìm thấy thông tin này trong các tài liệu hiện có.</p><p>Đã tìm trong 5 tài liệu.</p></div></div></div></div>' +
+      '<div class="msg-answer">' + av + '<div class="answer-body"><div class="callout callout-danger">' + icon("alertCircle") + '<div class="callout-body"><p class="callout-title">Hệ thống đang bận, vui lòng thử lại sau ít phút.</p><p class="muted">Mã tham chiếu: <span class="mono">REQ-8F2K1A</span></p></div></div></div></div>';
+    document.getElementById("t1").onclick = () => toast("Đã sẵn sàng: HopDong_v2.pdf", "success");
+    document.getElementById("t2").onclick = () => toast("Không xử lý được GiayPhep_Scan.pdf", "danger");
+    document.getElementById("t3").onclick = () => toast("Câu hỏi tiếp theo sẽ dùng 3 tài liệu đã chọn", "info");
+    document.getElementById("ds-banner").innerHTML = icon("wifiOff") + "<span>Mất kết nối. Câu hỏi của bạn vẫn được giữ lại.</span>";
+    document.getElementById("dlg").onclick = async () => { const ok = await confirmDialog({ title: "Gỡ tài liệu?", body: "“HopDong_v1.pdf” sẽ không còn được dùng để trả lời. Thao tác này không hoàn tác được.", confirmLabel: "Gỡ tài liệu", tone: "danger" }); toast(ok ? "Đã gỡ HopDong_v1.pdf" : "Đã huỷ", ok ? "success" : "info"); };
+    document.getElementById("empty-demo").innerHTML = '<div class="empty-icon">' + icon("history", "icon-lg") + '</div><h3>Chưa có hội thoại nào</h3><p>Các câu hỏi bạn đặt sẽ được lưu ở đây để xem lại.</p><button class="btn btn-primary btn-sm">Đặt câu hỏi đầu tiên</button>';
+    document.getElementById("ds-loading").innerHTML = icon("loader", "spin") + "<span>Đang tải…</span>";
+    window.CWD.demoPanel("Design System");
+    document.addEventListener("change", e => { if (e.target.id === "demo-theme") setTimeout(renderSwatches, 50); });
+  })();
+  </script>
+</body>
+</html>
